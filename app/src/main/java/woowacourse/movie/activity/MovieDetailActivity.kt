@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -52,24 +54,19 @@ class MovieDetailActivity : AppCompatActivity() {
     private fun getIntentMovieModel(): MovieListItem.MovieModel = intent.parcelable(MOVIE_KEY)
 
     private fun initMovieDataView(movie: MovieListItem.MovieModel) {
-        InitView.initImageView(findViewById(R.id.img_movie), movie.image)
-        InitView.initTextView(findViewById(R.id.text_title), movie.title)
-        InitView.initTextView(
-            findViewById(R.id.text_playing_date),
-            getString(
-                R.string.playing_time, movie.startDate,
-                movie.endDate
-            )
+        findViewById<ImageView>(R.id.img_movie).setImageResource(movie.image)
+        findViewById<TextView>(R.id.text_title).text = movie.title
+        findViewById<TextView>(R.id.text_playing_date).text = getString(
+            R.string.playing_time, movie.startDate,
+            movie.endDate
         )
-        InitView.initTextView(
-            findViewById(R.id.text_running_time),
+        findViewById<TextView>(R.id.text_running_time).text =
             getString(R.string.running_time, movie.runningTime)
-        )
-        InitView.initTextView(findViewById(R.id.text_description), movie.description)
+        findViewById<TextView>(R.id.text_description).text = movie.description
     }
 
     private fun initCountView(savedCount: Int) {
-        InitView.initTextView(findViewById(R.id.text_count), savedCount.toString())
+        findViewById<TextView>(R.id.text_count).text = savedCount.toString()
         initMinusButton()
         initPlusButton()
     }
@@ -85,12 +82,8 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun initTicketingButton(movieTitle: String) {
-        InitView.initButton(findViewById(R.id.btn_ticketing)) {
-            startActivity(
-                getIntentToSend(
-                    movieTitle
-                )
-            )
+        findViewById<Button>(R.id.btn_ticketing).setOnClickListener {
+            startActivity(getIntentToSend(movieTitle))
         }
     }
 
@@ -102,7 +95,7 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun initMinusButton() {
-        InitView.initButton(findViewById(R.id.btn_minus)) {
+        findViewById<Button>(R.id.btn_minus).setOnClickListener {
             val countView = findViewById<TextView>(R.id.text_count)
             val count = getCount()
             if (count > 1) countView.text = (count.minus(1)).toString()
@@ -110,7 +103,7 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun initPlusButton() {
-        InitView.initButton(findViewById(R.id.btn_plus)) {
+        findViewById<Button>(R.id.btn_plus).setOnClickListener {
             val countView = findViewById<TextView>(R.id.text_count)
             val count = getCount()
             countView.text = (count.plus(1)).toString()

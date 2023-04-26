@@ -46,8 +46,8 @@ class ReserveSeatActivity : AppCompatActivity() {
         intent.parcelable(RESERVATION_INFO_KEY)
 
     private fun initTicketInfoView(title: String) {
-        InitView.initTextView(findViewById(R.id.text_title), title)
-        InitView.initTextView(findViewById(R.id.text_price), "0")
+        findViewById<TextView>(R.id.text_title).text = title
+        findViewById<TextView>(R.id.text_price).text = "0"
     }
 
     private fun initSeatViews(
