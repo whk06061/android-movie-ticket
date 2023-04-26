@@ -9,31 +9,20 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.example.domain.model.model.Movie
 import org.hamcrest.core.AllOf.allOf
 import org.hamcrest.core.Is.`is`
 import org.hamcrest.core.IsInstanceOf.instanceOf
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.movie.activity.MovieDetailActivity
-import woowacourse.movie.mapper.toMovieModel
 import java.time.LocalDate
 
 class MovieDetailActivityTest {
 
-    private val movieModel = Movie(
-        R.drawable.movie_poster,
-        "해리포터 2",
-        LocalDate.of(2023, 3, 1),
-        LocalDate.of(2023, 3, 31),
-        152,
-        "줄거리"
-    ).toMovieModel()
-
     private val intent = Intent(
         ApplicationProvider.getApplicationContext(),
         MovieDetailActivity::class.java
-    ).putExtra("movie", movieModel)
+    ).putExtra("movie", MovieModel())
 
     @get:Rule
     val activityRule = ActivityScenarioRule<MovieDetailActivity>(intent)

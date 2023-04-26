@@ -11,30 +11,17 @@ import androidx.test.espresso.matcher.ViewMatchers.isSelected
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.example.domain.model.model.Payment
-import com.example.domain.model.model.ReservationInfo
 import org.hamcrest.core.IsNot.not
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.movie.activity.ReserveSeatActivity
-import woowacourse.movie.mapper.toReservationInfoModel
-import java.time.LocalDate
-import java.time.LocalTime
 
 class ReserveSeatActivityTest {
-
-    private val reservationInfoModel = ReservationInfo(
-        "해리포터 2",
-        LocalDate.of(2023, 3, 1),
-        LocalTime.of(9, 0),
-        3,
-        Payment.ON_SITE
-    ).toReservationInfoModel()
 
     private val intent = Intent(
         ApplicationProvider.getApplicationContext(),
         ReserveSeatActivity::class.java
-    ).putExtra("reservationInfo", reservationInfoModel)
+    ).putExtra("reservationInfo", ReservationInfoModel())
 
     @get:Rule
     val activityRule = ActivityScenarioRule<ReserveSeatActivity>(intent)
