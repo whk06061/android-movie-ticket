@@ -41,7 +41,7 @@ class ReserveSeatActivityTest {
 
     @Test
     fun 자리를_클릭하면_자리가_선택된다() {
-        // given
+        // given: 선택되지 않은 좌석이 있고
 
         // when: 자리를 클릭하면
         onView(withText("A2")).perform(click())
@@ -52,12 +52,12 @@ class ReserveSeatActivityTest {
 
     @Test
     fun 선택된_자리를_한번_더_클릭하면_해제된다() {
-        // given
+        // given: 선택된 좌석이 있고
 
         // when: 자리를 클릭하면
         onView(withText("A2")).perform(click()).perform(click())
 
-        // then: 자리가 선택된다
+        // then: 자리가 해제된다
         onView(withText("A2")).check(matches(isNotSelected()))
     }
 
