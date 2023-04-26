@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.TableLayout
 import android.widget.TableRow
@@ -36,7 +35,9 @@ class ReserveSeatActivity : AppCompatActivity() {
         initTicketInfoView(reservationInfoModel.title)
         initSeatViews(reservationInfoModel)
         val reserveButton = findViewById<Button>(R.id.btn_reserve)
-        reserveButton.setOnClickListener(ReserveButtonListener(reservationInfoModel))
+        reserveButton.setOnClickListener {
+            onReserveButtonClick(reservationInfoModel)
+        }
         activityToolbarHelper = ActivityToolbarHelper(this)
         activityToolbarHelper.setActionBar()
     }
@@ -58,7 +59,7 @@ class ReserveSeatActivity : AppCompatActivity() {
         val priceTextView: TextView = findViewById(R.id.text_price)
         seatViews.forEachIndexed { index, button ->
             button.setOnClickListener {
-                val seat = convertToSeat(index)
+                val seat = Seat.convertIndexToSeat(index)
                 val seatPrice = seat.calculatePrice(
                     reservationInfo.playingDate,
                     reservationInfo.playingTime
@@ -106,53 +107,37 @@ class ReserveSeatActivity : AppCompatActivity() {
         .flatMap { it.children }
         .filterIsInstance<Button>().toList()
 
-    private fun getDialog(clickYes: () -> Unit): AlertDialog.Builder = AlertDialog.Builder(this)
-        .setTitle(getString(R.string.dialog_title))
-        .setMessage(getString(R.string.dialog_message))
-        .setPositiveButton(getString(R.string.dialog_yes)) { _, _ ->
-            clickYes()
-        }
-        .setNegativeButton(getString(R.string.dialog_no)) { dialog, _ ->
-            dialog.dismiss()
-        }
-
-    private fun convertToSeat(index: Int): Seat {
-        val row = index / COLUMN_COUNT
-        val column = index % COLUMN_COUNT
-        return Seat(row, column)
+    private fun getSelectedSeatPrice(): Int {
+        val priceTextView: TextView = findViewById(R.id.text_price)
+        return priceTextView.text.toString().toInt()
     }
 
-    private fun getIntentToSend(ticketModel: TicketModel): Intent {
-        val intent = Intent(this, TicketResultActivity::class.java)
+    private fun getSelectedSeats(): MutableList<SeatModel> {
+        return getSeatViews()
+            .withIndex()
+            .filter { it.value.isSelected }
+            .map { Seat.convertIndexToSeat(it.index).toSeatModel() }
+            .toMutableList()
+    }
+
+    private fun onReserveButtonClick(reservationInfoModel: ReservationInfoModel) {
+        val ticketModel =
+            TicketModel(reservationInfoModel, getSelectedSeatPrice(), getSelectedSeats())
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.dialog_title))
+            .setMessage(getString(R.string.dialog_message))
+            .setPositiveButton(getString(R.string.dialog_yes)) { _, _ ->
+                startActivity(getIntentToSend(this, ticketModel))
+            }
+            .setNegativeButton(getString(R.string.dialog_no)) { dialog, _ ->
+                dialog.dismiss()
+            }.setCancelable(false).show()
+    }
+
+    private fun getIntentToSend(activity: AppCompatActivity, ticketModel: TicketModel): Intent {
+        val intent = Intent(activity, TicketResultActivity::class.java)
         intent.putExtra(TICKET_KEY, ticketModel)
         return intent
-    }
-
-    inner class ReserveButtonListener(
-        private val reservationInfoModel: ReservationInfoModel
-    ) : View.OnClickListener {
-        override fun onClick(p0: View?) {
-            val ticketModel =
-                TicketModel(reservationInfoModel, getSelectedSeatPrice(), getSelectedSeats())
-            val alertDialog = getDialog {
-                startActivity(getIntentToSend(ticketModel))
-            }
-            alertDialog.setCancelable(false)
-            alertDialog.show()
-        }
-
-        private fun getSelectedSeatPrice(): Int {
-            val priceTextView: TextView = findViewById(R.id.text_price)
-            return priceTextView.text.toString().toInt()
-        }
-
-        private fun getSelectedSeats(): MutableList<SeatModel> {
-            return getSeatViews()
-                .withIndex()
-                .filter { it.value.isSelected }
-                .map { convertToSeat(it.index).toSeatModel() }
-                .toMutableList()
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -160,8 +145,7 @@ class ReserveSeatActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val RESERVATION_INFO_KEY = "reservationInfo"
         private const val TICKET_KEY = "ticket"
-        const val COLUMN_COUNT = 4
+        private const val RESERVATION_INFO_KEY = "reservationInfo"
     }
 }

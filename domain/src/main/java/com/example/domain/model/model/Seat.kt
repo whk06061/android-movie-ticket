@@ -22,5 +22,11 @@ data class Seat(val row: Int, val column: Int) {
 
     companion object {
         private const val CANT_MATCHING_RANK_ERROR = "해당 열에 해당하는 등급이 없습니다."
+        private const val COLUMN_COUNT = 4
+        fun convertIndexToSeat(index: Int): Seat {
+            val row = index / COLUMN_COUNT
+            val column = index % COLUMN_COUNT
+            return Seat(row, column)
+        }
     }
 }
