@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.movie.R
 import woowacourse.movie.adapter.MovieListAdapter
-import woowacourse.movie.data.MockDataRepository
+import woowacourse.movie.data.MockAdRepository
+import woowacourse.movie.data.MockMovieRepository
 import woowacourse.movie.model.MovieListItem
 
 class MovieListActivity : AppCompatActivity() {
@@ -38,8 +39,8 @@ class MovieListActivity : AppCompatActivity() {
     }
 
     private fun getMovieListData(): List<MovieListItem> {
-        val movies = MockDataRepository.getData(MovieListItem.MovieModel::class)
-        val ads = MockDataRepository.getData(MovieListItem.AdModel::class)
+        val movies = MockMovieRepository.getData()
+        val ads = MockAdRepository.getData()
         return movies.flatMapIndexed { movieIndex, movie ->
             if (checkAdItemOrder(movieIndex)) {
                 val adIndex = (movieIndex / AD_CYCLE) % ads.size
