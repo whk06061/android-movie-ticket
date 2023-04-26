@@ -51,7 +51,7 @@ class MovieDetailActivity : AppCompatActivity() {
         activityToolbarHelper.setActionBar()
     }
 
-    private fun getIntentMovieModel(): MovieListItem.MovieModel = intent.parcelable(MOVIE_KEY)
+    private fun getIntentMovieModel(): MovieListItem.MovieModel = intent.parcelable(MovieListActivity.MOVIE_KEY)
 
     private fun initMovieDataView(movie: MovieListItem.MovieModel) {
         findViewById<ImageView>(R.id.img_movie).setImageResource(movie.image)
@@ -125,13 +125,13 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun getSavedCount(savedInstanceState: Bundle?): Int =
-        savedInstanceState?.getInt(COUNT_KEY) ?: DEFAULT_COUNT
+        savedInstanceState?.getInt(SAVE_INSTANCE_COUNT_KEY) ?: DEFAULT_COUNT
 
     private fun getSavedDateSpinnerIndex(savedInstanceState: Bundle?): Int =
-        savedInstanceState?.getInt(SPINNER_DATE_KEY) ?: DEFAULT_POSITION
+        savedInstanceState?.getInt(SAVE_INSTANCE_SPINNER_DATE_KEY) ?: DEFAULT_POSITION
 
     private fun getSavedTimeSpinnerIndex(savedInstanceState: Bundle?): Int =
-        savedInstanceState?.getInt(SPINNER_TIME_KEY) ?: DEFAULT_POSITION
+        savedInstanceState?.getInt(SAVE_INSTANCE_SPINNER_TIME_KEY) ?: DEFAULT_POSITION
 
     private fun initTimeSpinner(
         savedTimeSpinnerIndex: Int,
@@ -174,11 +174,11 @@ class MovieDetailActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val countText = findViewById<TextView>(R.id.text_count)
-        outState.putInt(COUNT_KEY, countText.text.toString().toInt())
+        outState.putInt(SAVE_INSTANCE_COUNT_KEY, countText.text.toString().toInt())
         val spinnerDate = findViewById<Spinner>(R.id.spinner_date)
-        outState.putInt(SPINNER_DATE_KEY, spinnerDate.selectedItemPosition)
+        outState.putInt(SAVE_INSTANCE_SPINNER_DATE_KEY, spinnerDate.selectedItemPosition)
         val spinnerTime = findViewById<Spinner>(R.id.spinner_time)
-        outState.putInt(SPINNER_TIME_KEY, spinnerTime.selectedItemPosition)
+        outState.putInt(SAVE_INSTANCE_SPINNER_TIME_KEY, spinnerTime.selectedItemPosition)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -186,11 +186,10 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val MOVIE_KEY = "movie"
-        private const val COUNT_KEY = "COUNT"
-        private const val SPINNER_DATE_KEY = "SPINNER_DATE"
-        private const val SPINNER_TIME_KEY = "SPINNER_TIME"
-        private const val RESERVATION_INFO_KEY = "reservationInfo"
+        private const val SAVE_INSTANCE_COUNT_KEY = "COUNT"
+        private const val SAVE_INSTANCE_SPINNER_DATE_KEY = "SPINNER_DATE"
+        private const val SAVE_INSTANCE_SPINNER_TIME_KEY = "SPINNER_TIME"
+        const val RESERVATION_INFO_KEY = "reservationInfo"
         private const val DEFAULT_COUNT = 1
         private const val DEFAULT_POSITION = 0
     }

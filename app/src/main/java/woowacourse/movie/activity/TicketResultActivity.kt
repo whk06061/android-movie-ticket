@@ -41,12 +41,10 @@ class TicketResultActivity : AppCompatActivity() {
         )
     }
 
-    private fun getIntentTicketModel(): TicketModel = intent.parcelable(TICKET_KEY)
+    private fun getIntentTicketModel(): TicketModel =
+        intent.parcelable(ReserveSeatActivity.TICKET_KEY)
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return activityToolbarHelper.onOptionsItemSelected(item, super.onOptionsItemSelected(item))
-    }
-
-    companion object {
-        private const val TICKET_KEY = "ticket"
     }
 }

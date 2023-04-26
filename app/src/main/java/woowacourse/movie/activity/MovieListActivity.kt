@@ -52,6 +52,6 @@ class MovieListActivity : AppCompatActivity() {
 
     companion object {
         private const val AD_CYCLE = 3
-        private const val MOVIE_KEY = "movie"
+        const val MOVIE_KEY = "movie"
     }
 }

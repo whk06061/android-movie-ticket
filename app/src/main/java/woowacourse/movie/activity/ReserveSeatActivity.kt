@@ -43,7 +43,7 @@ class ReserveSeatActivity : AppCompatActivity() {
     }
 
     private fun getIntentReserveInfoModel(): ReservationInfoModel =
-        intent.parcelable(RESERVATION_INFO_KEY)
+        intent.parcelable(MovieDetailActivity.RESERVATION_INFO_KEY)
 
     private fun initTicketInfoView(title: String) {
         findViewById<TextView>(R.id.text_title).text = title
@@ -145,7 +145,6 @@ class ReserveSeatActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val TICKET_KEY = "ticket"
-        private const val RESERVATION_INFO_KEY = "reservationInfo"
+        const val TICKET_KEY = "ticket"
     }
 }
