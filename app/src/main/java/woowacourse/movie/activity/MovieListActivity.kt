@@ -14,7 +14,6 @@ class MovieListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_list)
-
         initRecyclerView()
     }
 
@@ -41,14 +40,15 @@ class MovieListActivity : AppCompatActivity() {
     private fun getMovieListData(): List<MovieListItem> {
         val movies = MockDataRepository.getData(MovieListItem.MovieModel::class)
         val ads = MockDataRepository.getData(MovieListItem.AdModel::class)
-        var adIndex = 0
-        return movies.flatMapIndexed { index, movie ->
-            if (index % AD_CYCLE == AD_CYCLE - 1) listOf(
-                movie,
-                ads[adIndex++ % ads.size]
-            ) else listOf(movie)
+        return movies.flatMapIndexed { movieIndex, movie ->
+            if (checkAdItemOrder(movieIndex)) {
+                val adIndex = (movieIndex / AD_CYCLE) % ads.size
+                listOf(movie, ads[adIndex])
+            } else listOf(movie)
         }
     }
+
+    private fun checkAdItemOrder(movieIndex: Int): Boolean = (movieIndex + 1) % AD_CYCLE == 0
 
     companion object {
         private const val AD_CYCLE = 3
