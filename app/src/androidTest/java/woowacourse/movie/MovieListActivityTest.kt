@@ -2,22 +2,18 @@ package woowacourse.movie
 
 import android.app.Instrumentation
 import android.content.Intent
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.intent.Intents.init
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
-import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -31,9 +27,6 @@ import woowacourse.movie.adapter.viewholder.MovieViewHolder
 class MovieListActivityTest {
     @get:Rule
     val activityRule = ActivityScenarioRule(MovieListActivity::class.java)
-
-    @get:Rule
-    val intentsTestRule = IntentsTestRule(MovieListActivity::class.java)
 
     @Test
     fun 리사이클러뷰에_세_개의_영화가_연달아_나온다() {
@@ -83,12 +76,11 @@ class MovieListActivityTest {
 
     @Test
     fun 영화_아이템의_예매_버튼을_클릭하면_영화_예매_화면으로_이동한다() {
-
+        init()
         // when: 영화 아이템의 예매 버튼을 클릭하면
         onView(withId(R.id.recycler_view)).perform(
             RecyclerViewActions.actionOnItemAtPosition<MovieViewHolder>(
-                0,
-                MyViewAction.clickChildViewWithId(R.id.btn_ticketing)
+                0, MovieListViewAction.clickChildViewWithId(R.id.btn_ticketing)
             )
         )
 
@@ -107,32 +99,12 @@ class MovieListActivityTest {
         // when: 광고 아이템을 클릭하면
         onView(withId(R.id.recycler_view)).perform(
             RecyclerViewActions.actionOnItemAtPosition<AdViewHolder>(
-                3,
-                click()
+                3, click()
             )
         )
 
         // then: 해당 링크로 이동한다
         intended(expectedIntent)
-    }
-
-    object MyViewAction {
-        fun clickChildViewWithId(id: Int): ViewAction {
-            return object : ViewAction {
-                override fun getConstraints(): Matcher<View>? {
-                    return null
-                }
-
-                override fun getDescription(): String {
-                    return "Click on a child view with specified id."
-                }
-
-                override fun perform(uiController: UiController?, view: View) {
-                    val v: View = view.findViewById(id)
-                    v.performClick()
-                }
-            }
-        }
     }
 
     companion object {
