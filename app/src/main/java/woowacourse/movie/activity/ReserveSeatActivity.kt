@@ -3,15 +3,18 @@ package woowacourse.movie.activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import com.example.domain.model.model.ReservationInfo
 import com.example.domain.model.model.Seat
+import woowacourse.movie.ActivityToolbarHelper
 import woowacourse.movie.R
 import woowacourse.movie.mapper.toReservationInfo
 import woowacourse.movie.mapper.toSeatModel
@@ -20,7 +23,10 @@ import woowacourse.movie.model.SeatModel
 import woowacourse.movie.model.TicketModel
 import woowacourse.movie.util.parcelable
 
-class ReserveSeatActivity : BaseActivity() {
+class ReserveSeatActivity : AppCompatActivity() {
+
+    private lateinit var activityToolbarHelper: ActivityToolbarHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reserve_seat)
@@ -31,7 +37,8 @@ class ReserveSeatActivity : BaseActivity() {
         initSeatViews(reservationInfoModel)
         val reserveButton = findViewById<Button>(R.id.btn_reserve)
         reserveButton.setOnClickListener(ReserveButtonListener(reservationInfoModel))
-        setActionBar()
+        activityToolbarHelper = ActivityToolbarHelper(this)
+        activityToolbarHelper.setActionBar()
     }
 
     private fun getIntentReserveInfoModel(): ReservationInfoModel =
@@ -146,6 +153,10 @@ class ReserveSeatActivity : BaseActivity() {
                 .map { convertToSeat(it.index).toSeatModel() }
                 .toMutableList()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return activityToolbarHelper.onOptionsItemSelected(item, super.onOptionsItemSelected(item))
     }
 
     companion object {
